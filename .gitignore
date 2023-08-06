@@ -1,0 +1,11 @@
+data/birds525/*
+data/cifar-10-batches-py/*
+
+*_checkpoint
+final_checkpoint
+ver*_history.csv
+
+.*
+!.gitignore
+!.gitkeep
+!.gitattributes
