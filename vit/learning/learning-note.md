@@ -26,7 +26,7 @@
 ### 3.1 Vision Transformer (ViT)
 图 1 展示了本模型的概况。
 
-![Fig 1](fig1.png)
+![Fig 1](imgs/fig1.png)
 
 标准 Transformer 接受 1D token 序列作为输入。要处理图像，我们将原图像 $\textbf x \in \R^{H \times W \times C}$ 转化为摊平了的 2D 补丁序列 $\textbf x_p \in \R^{N \times (P^2 \cdot C)}$，其中 $H, W, C$ 是图像的高、宽、通道数，$P$ 是补丁的边长，$N = HW / P^2$ 是补丁个数，也是 Transformer 输入序列的长度。Transformer 需要用大小为 $D$ 的潜在向量（latent vector）扫描过所有层，因此我们应摊平补丁序列，并用一个可训练的线性映射（式 1）映射到 $D$ 维。我们将此输出称为补丁的嵌入（patch embeddings）。
 
@@ -64,7 +64,7 @@ $$
 
 **模型变种**。我们基于 BERT 使用的配置来构造 ViT 的配置，如表 1 所示。
 
-![Table 1](table1.png)
+![Table 1](imgs/table1.png)
 
 Base 和 Large 模型直接从 BERT 搬运而来，Huge 模型则是我们添加的更大的模型。下文我们会用简单的语言表示模型的大小和输入补丁的大小，如 Vit-L/16 表示输入补丁大小为 $16 \times 16$ 的 Large 模型。需要注意的是，Transformer 的序列长度与补丁大小平方负相关，因而补丁越小，计算成本越高。
 
@@ -72,4 +72,4 @@ Base 和 Large 模型直接从 BERT 搬运而来，Huge 模型则是我们添加
 
 **训练和微调**。我们使用 $\beta_1 = 0.9, \beta_2 = 0.999$ 的 Adam 训练模型，batch size 为 $4096$，weight decay 为 $0.1$（设置高的 weight decay 有利于迁移）。在附录 D.1 中我们说明了在此设置下，Adam 比 SGD 的效果要更好，虽然这是违背往常经验的。我们还用了一个线性的学习率 warmup 和 decay，参见附录 B.1。对于微调，我们使用带动量的 SGD，batch size 为 $512$，参见附录 B.1.1。我们通过在更高的分辨率（ViT-L/16 为 $512$，ViT-H/14 为 $518$）上微调，加上 Polyak & Juditsky (1992) 的平均方式（系数为 $0.9999$）得到了表 2 的 ImageNet 结果。
 
-![Table 2](table2.png)
+![Table 2](imgs/table2.png)
